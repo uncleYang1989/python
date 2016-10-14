@@ -14,7 +14,7 @@ if __name__ == "__main__":
     while True:
         conn = None;
         try:
-            conn = sqlite3.connect("normal.db")
+            conn = sqlite3.connect("../omim1011.db")
             cu = conn.cursor()  
             select_sql = 'select count(0) from keys';
             cu.execute(select_sql)  
@@ -30,12 +30,18 @@ if __name__ == "__main__":
             cu.execute(select_sql)  
             result = cu.fetchall()
             inProcess = result[0][0]
-            avg = ((finished-onBeginFinished)*3600)/(int(time.time())-beginTime)
+            avg = None
+            try:
+                avg = ((finished-onBeginFinished)*3600)/(int(time.time())-beginTime)
+            except Exception,e:
+                pass
             if avg:
                 last = float(total - finished)/avg
+                last = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime( last*60*60+time.time()))
             else:
                 last = "unknown"
-            print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),u"%d/%d(%f) 平均每小时处理[%s] 预计剩余[%s]小时完成 %d in Process"%(finished, total, float(finished)/total, avg, last, inProcess)
+                
+            print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),u"%d/%d(%f) 平均每小时处理[%s] 预计完成时间[%s] %d in Process"%(finished, total, float(finished)/total, avg, last, inProcess)
         finally:
             if conn:
                 conn.close()
