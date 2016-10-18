@@ -8,6 +8,7 @@ Created on 2016年6月20日
 '''
 import sqlite3,time
 from com.office.template2 import DBNAME
+import sys
 
 if __name__ == "__main__":
     onBeginFinished=None;
@@ -31,6 +32,9 @@ if __name__ == "__main__":
             cu.execute(select_sql)  
             result = cu.fetchall()
             inProcess = result[0][0]
+            if finished >= onBeginFinished:
+                print "success"
+                sys.exit(0)
             avg = None
             try:
                 avg = ((finished-onBeginFinished)*3600)/(int(time.time())-beginTime)
@@ -41,7 +45,6 @@ if __name__ == "__main__":
                 last = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime( last*60*60+time.time()))
             else:
                 last = "unknown"
-                
             print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),u"%d/%d(%f) 平均每小时处理[%s] 预计完成时间[%s] %d in Process"%(finished, total, float(finished)/total, avg, last, inProcess)
         finally:
             if conn:

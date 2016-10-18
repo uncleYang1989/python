@@ -29,7 +29,7 @@ def batchExtRename(dirName, oldExt, newExt):
             old = os.path.join(dirName, f)
             new = os.path.join(dirName, f.replace(oldExt, newExt))
             os.rename(old, new)
-def getKeyList(excelPathname, isAll = False, sheetName="Sheet2"):
+def getKeyList(excelPathname, isAll = False, sheetName="Sheet1"):
     print "从［%s］中读取关键字.."%excelPathname
     import xlrd
     data = xlrd.open_workbook(excelPathname);

@@ -6,7 +6,7 @@ DATABASE_PATHNAME = "/Users/yangjie/mywork/workspace/mypython/com/office/stitch/
 '''启动的进程数'''
 PROCESS_NUM=4
 '''#谷歌浏览器驱动的路径'''
-DIRVER_PATHNAME= "/Users/yangjie/Documents/env/jyang-site-packages/chromedriver_2.21/chromedriver_mac32/chromedriver"
+DIRVER_PATHNAME= "/Users/yangjie/Documents/env/python/chromedriver_2.21/chromedriver_mac32/chromedriver"
 '''#要抓取的网站的URL'''
 URL="http://stitch.embl.de/"
 '''#单个任务超时时间'''

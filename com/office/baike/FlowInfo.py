@@ -17,7 +17,7 @@ class FlowInfo():
         self.recordPathname = cf.get("baseconf", "recordPathname");
         self.resultPathname = cf.get("baseconf", "resultPathname");
         
-#         self.keys = getKeyList(self.srcKeyPathname)
+        self.keys = getKeyList(self.srcKeyPathname)
         self.keyStr = ""
         try:
             self.keyStr = readFile(self.recordPathname)
@@ -26,7 +26,7 @@ class FlowInfo():
             pass
         # #使用第三方库，模拟浏览器登录
         from selenium import webdriver
-        executable_path="/Users/yangjie/Documents/env/jyang-site-packages/chromedriver_2.21/chromedriver_mac32/chromedriver"
+        executable_path= "/Users/yangjie/Documents/env/python/chromedriver_2.21/chromedriver_mac32/chromedriver"
         self.driver = webdriver.Chrome(executable_path)
 
 if __name__ == "__main__":

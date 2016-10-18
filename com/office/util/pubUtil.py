@@ -11,7 +11,7 @@ def doInThread(callable_, argsList, poolNum=5):
         pool.putRequest(req)
     pool.wait()
 
-def retry(func, times=100, sleepSeconds=0.1, allowError=False, raiseOnError=False):
+def retry(func, times=10, sleepSeconds=0.1, allowError=False, raiseOnError=False):
     import time
     lastE = None
     while times > 0:
@@ -23,8 +23,8 @@ def retry(func, times=100, sleepSeconds=0.1, allowError=False, raiseOnError=Fals
             time.sleep(sleepSeconds)
         else:
             return True;
-    if not allowError:
-        print lastE
+#     if not allowError:
+#         print lastE
     if raiseOnError:
         raise Exception, "onerror"
     return False;

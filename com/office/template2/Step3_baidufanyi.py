@@ -55,9 +55,10 @@ def doSomething(driver, keyword, tableId, pfi):
             if len(text) < len(keyword):
                 print "less "
                 time.sleep(0.2)
-            print keyword
-            print text
-            print 
+            if IS_NEED_PRINT_RATE:
+                print keyword
+                print text
+                print 
             text = driver.find_element_by_xpath("//div[@class='output-bd']/p[@class='ordinary-output target-output clearfix']").text.strip()
             addResult([[keyword,text,'']])
             pfi.lastText = text
