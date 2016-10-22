@@ -2,13 +2,13 @@
 # -*-coding:UTF-8-*-
 # encoding=utf8
 '''#数据库的路径'''
-DATABASE_PATHNAME = r"/Users/yangjie/mywork/workspace/mypython/com/office/template3ncbi/db/ncbi1017.db"
+DATABASE_PATHNAME = r"/Users/yangjie/mywork/workspace/mypython/com/office/template4ncbiplus/db/ncbi1022.db"
 '''启动的进程数'''
-PROCESS_NUM=1
+PROCESS_NUM=10
 '''#谷歌浏览器驱动的路径'''
 DIRVER_PATHNAME= "/Users/yangjie/Documents/env/python/chromedriver_2.21/chromedriver_mac32/chromedriver"
 '''#要抓取的网站的URL'''
-URL="http://www.ncbi.nlm.nih.gov/pccompound"
+URL="about:blank"
 '''#单个任务超时时间'''
 OVER_TIME_PROCESS=120
 '''启动浏览器的超时时间'''
@@ -27,56 +27,70 @@ IS_NEED_DRIVER=True
 例:
     updateStatus(STATUS_SUCCESS, tableId)
 '''
-from urllib import quote
 def doSomething(driver, keyword, tableId, pfi):
-    key = keyword;
+    name = keyword.split(u"SPLITMARK")[0];
+    mf = keyword.split(u"SPLITMARK")[1];
     
-    driver.get("https://www.ncbi.nlm.nih.gov/pccompound/?term="+keyword);
+    try:
+        driver.get("https://www.ncbi.nlm.nih.gov/pccompound/?term="+name);
+    except Exception,e:
+        addResult([[name,mf,"None","None","None"]])
+        updateStatus(STATUS_SUCCESS, tableId)
+        return
     retry(lambda:driver.find_element_by_id("msgportlet"));
     try:
         msgEle = driver.find_element_by_id("msgportlet");
         if "No items found." in msgEle.text:
-            addResult([[key,"None","None","None","None"]])
+            addResult([[name,mf,"None","None","None"]])
             updateStatus(STATUS_SUCCESS, tableId)
             return
     except Exception,e:
         del e
-        
+    
+    
+    resultEle = None
     try:
-        retry(lambda:driver.find_element_by_xpath("//table[@class='top-summary-items']/tbody/tr/td"))
-        resID=driver.find_element_by_xpath("//table[@class='top-summary-items']/tbody/tr/td").text
-        cs =""
-        try:
-            retry(lambda:driver.find_element_by_xpath('//*[@id="Canonical-SMILES"]/div/div[@class="section-content-item"]'))
-            cs=driver.find_element_by_xpath('//*[@id="Canonical-SMILES"]/div/div[@class="section-content-item"]').text
-        except Exception,e:
-            del e
-            pass
-        addResult([[key,driver.current_url,resID,cs,""]])
-        updateStatus(STATUS_SUCCESS, tableId)
-        return
-    except Exception,e:
+        resultEle = driver.find_element_by_class_name("title_and_pager");
+    except Exception, e:
         del e
-    retry(lambda:driver.find_elements_by_xpath("//div[@class='content']/div/div/div/div/p/a"))
-    myTagas=driver.find_elements_by_xpath("//div[@class='content']/div/div/div/div/p/a")
-    for myTaga in myTagas:
-        if key.upper() in myTaga.text.upper():
-            href=myTaga.get_attribute("href")
-            from selenium import webdriver
-            drivercontent=webdriver.Chrome(executable_path = DIRVER_PATHNAME)
-            drivercontent.get(href)
-            retry(lambda:drivercontent.find_element_by_xpath("//table[@class='top-summary-items']/tbody/tr/td"))
-            resID=drivercontent.find_element_by_xpath("//table[@class='top-summary-items']/tbody/tr/td").text
-            cs =""
-            retry(lambda:drivercontent.find_element_by_xpath('//*[@id="Canonical-SMILES"]/div/div[@class="section-content-item"]'))
-            cs=drivercontent.find_element_by_xpath('//*[@id="Canonical-SMILES"]/div/div[@class="section-content-item"]').text
-            addResult([[key,href,resID,cs,""]])
-            updateStatus(STATUS_SUCCESS, tableId)
-            drivercontent.quit();
-            return
-    addResult([[key,"None","None","None","None"]])
+    if resultEle is None:
+        retry(lambda:driver.find_element_by_id("msgportlet"));
+        parseDetail(driver, mf, name, tableId);
+        return
+    else:
+        retry(lambda:driver.find_elements_by_class_name("rsltcont"));
+        rsltcontEles =driver.find_elements_by_class_name("rsltcont")
+        for rsltcontEle in rsltcontEles:
+            if mf.upper() in rsltcontEle.text.upper():
+                href=rsltcontEle.find_element_by_xpath("//p[@class='title']/a").get_attribute("href");
+                driver.get(href);
+                parseDetail(driver, mf, name, tableId);
+                return
+    addResult([[keyword,"None","None","None","None"]])
     updateStatus(STATUS_SUCCESS, tableId)
 
+
+def parseDetail(drivercontent, mf, name, tableId):
+    retry(lambda:drivercontent.find_elements_by_xpath("//table[@class='top-summary-items']/tbody/tr"))
+    trEles=drivercontent.find_elements_by_xpath("//table[@class='top-summary-items']/tbody/tr")
+    resID = ""
+    cs = ""
+    onlineMF=""
+    for trEle in trEles:
+        tmp = trEle.text.split(":")
+        if tmp[0] == u"PubChem CID":
+            resID = tmp[1]
+        elif tmp[0] == u"Molecular Formula":
+            onlineMF = tmp[1]
+            if onlineMF.strip().upper() != mf.strip().upper():
+                addResult([[name,"NOT MATCH",resID,cs,""]])
+                updateStatus(STATUS_SUCCESS, tableId)
+                return
+    cs =""
+    retry(lambda:drivercontent.find_element_by_xpath('//*[@id="Canonical-SMILES"]/div/div[@class="section-content-item"]'), times=180)
+    cs=drivercontent.find_element_by_xpath('//*[@id="Canonical-SMILES"]/div/div[@class="section-content-item"]').text
+    addResult([[name,mf,resID,cs,""]])
+    updateStatus(STATUS_SUCCESS, tableId)
 '''
 以下为框架代码，不需要修改
 '''
