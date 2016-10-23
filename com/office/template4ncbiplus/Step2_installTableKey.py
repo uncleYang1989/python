@@ -7,15 +7,15 @@ Created on 2016年6月20日
 @author: yangjie
 '''
 from com.office.util.codeUtil import forbidCodeErr
+from com.office.template4ncbiplus import DBNAME
 forbidCodeErr()
 from com.office.util.sqlUtil import save
 from com.office.util import fileUtil
-from com.office.template2 import DBNAME
 from com.office.util.excelUtil import read
 
 if __name__ == "__main__":
     keywords = []
-    srcpathname = r"/Users/yangjie/mywork/workspace/mypython/com/office/template4ncbiplus/db/update_pubid.xlsx"
+    srcpathname = r"/Users/yangjie/mywork/workspace/mypython/com/office/template4ncbiplus/db/update_pubid2.xlsx"
     if srcpathname.endswith("xls") or srcpathname.endswith("xlsx"):
         tableData = read(srcpathname, "Sheet2");
         for row in tableData:

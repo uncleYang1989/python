@@ -6,7 +6,7 @@ Created on 2016年6月20日
 
 @author: yangjie
 '''
-from com.office.template2 import DBNAME
+from com.office.template4ncbiplus import DBNAME
 
 if __name__ == "__main__":
     import sqlite3

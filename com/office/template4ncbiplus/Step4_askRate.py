@@ -30,7 +30,7 @@ if __name__ == "__main__":
     while True:
         conn = None;
         try:
-            conn = sqlite3.connect("/Users/yangjie/mywork/workspace/mypython/com/office/template4ncbiplus/db/ncbi1022.db")
+            conn = sqlite3.connect("/Users/yangjie/mywork/workspace/mypython/com/office/template4ncbiplus/db/ncbi1023.db")
             cu = conn.cursor()  
             select_sql = 'select count(0) from keys';
             cu.execute(select_sql)  

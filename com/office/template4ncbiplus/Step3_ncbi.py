@@ -2,13 +2,13 @@
 # -*-coding:UTF-8-*-
 # encoding=utf8
 '''#数据库的路径'''
-DATABASE_PATHNAME = r"/Users/yangjie/mywork/workspace/mypython/com/office/template4ncbiplus/db/ncbi1022.db"
+DATABASE_PATHNAME = r"/Users/yangjie/mywork/workspace/mypython/com/office/template4ncbiplus/db/ncbi1023.db"
 '''启动的进程数'''
-PROCESS_NUM=10
+PROCESS_NUM=8
 '''#谷歌浏览器驱动的路径'''
 DIRVER_PATHNAME= "/Users/yangjie/Documents/env/python/chromedriver_2.21/chromedriver_mac32/chromedriver"
 '''#要抓取的网站的URL'''
-URL="about:blank"
+URL=""
 '''#单个任务超时时间'''
 OVER_TIME_PROCESS=120
 '''启动浏览器的超时时间'''
@@ -29,19 +29,21 @@ IS_NEED_DRIVER=True
 '''
 def doSomething(driver, keyword, tableId, pfi):
     name = keyword.split(u"SPLITMARK")[0];
-    mf = keyword.split(u"SPLITMARK")[1];
-    
+    if len(keyword.split(u"SPLITMARK")) > 1:
+        mf = keyword.split(u"SPLITMARK")[1];
+    else:
+        mf = ""
     try:
         driver.get("https://www.ncbi.nlm.nih.gov/pccompound/?term="+name);
     except Exception,e:
-        addResult([[name,mf,"None","None","None"]])
+#         addResult([[keyword, name,mf,"None","None"]])
         updateStatus(STATUS_SUCCESS, tableId)
         return
     retry(lambda:driver.find_element_by_id("msgportlet"));
     try:
         msgEle = driver.find_element_by_id("msgportlet");
         if "No items found." in msgEle.text:
-            addResult([[name,mf,"None","None","None"]])
+#             addResult([[keyword, name,mf,"None","None"]])
             updateStatus(STATUS_SUCCESS, tableId)
             return
     except Exception,e:
@@ -55,26 +57,29 @@ def doSomething(driver, keyword, tableId, pfi):
         del e
     if resultEle is None:
         retry(lambda:driver.find_element_by_id("msgportlet"));
-        parseDetail(driver, mf, name, tableId);
+        parseDetail(driver, mf, name, tableId,keyword);
         return
     else:
         retry(lambda:driver.find_elements_by_class_name("rsltcont"));
         rsltcontEles =driver.find_elements_by_class_name("rsltcont")
+        if mf.strip() == u'Not Available' and len(rsltcontEles) != 1:
+#             addResult([[keyword, name,mf,"None","None"]])
+            updateStatus(STATUS_SUCCESS, tableId)
+            return
         for rsltcontEle in rsltcontEles:
-            if mf.upper() in rsltcontEle.text.upper():
+            if mf.upper() in rsltcontEle.text.upper() and name.upper() in rsltcontEle.text.upper():
                 href=rsltcontEle.find_element_by_xpath("//p[@class='title']/a").get_attribute("href");
                 driver.get(href);
-                parseDetail(driver, mf, name, tableId);
+                parseDetail(driver, mf, name, tableId,keyword);
                 return
-    addResult([[keyword,"None","None","None","None"]])
+#     addResult([[keyword, name,mf,"None","None"]])
     updateStatus(STATUS_SUCCESS, tableId)
 
 
-def parseDetail(drivercontent, mf, name, tableId):
+def parseDetail(drivercontent, mf, name, tableId,keyword):
     retry(lambda:drivercontent.find_elements_by_xpath("//table[@class='top-summary-items']/tbody/tr"))
     trEles=drivercontent.find_elements_by_xpath("//table[@class='top-summary-items']/tbody/tr")
     resID = ""
-    cs = ""
     onlineMF=""
     for trEle in trEles:
         tmp = trEle.text.split(":")
@@ -82,14 +87,17 @@ def parseDetail(drivercontent, mf, name, tableId):
             resID = tmp[1]
         elif tmp[0] == u"Molecular Formula":
             onlineMF = tmp[1]
-            if onlineMF.strip().upper() != mf.strip().upper():
-                addResult([[name,"NOT MATCH",resID,cs,""]])
+            if mf.strip() and mf.strip() != u'Not Available' and onlineMF.strip().upper() != mf.strip().upper():
+#                 addResult([[keyword, name,mf,"None","None"]])
                 updateStatus(STATUS_SUCCESS, tableId)
                 return
-    cs =""
-    retry(lambda:drivercontent.find_element_by_xpath('//*[@id="Canonical-SMILES"]/div/div[@class="section-content-item"]'), times=180)
+            if mf.strip() == u'Not Available':
+                mf=onlineMF.strip().upper();
+    if not resID:
+        resID = drivercontent.current_url.split(r"#")[0].split(r"?")[0].split(r'/')[-1];
+    retry(lambda:drivercontent.find_element_by_xpath('//*[@id="Canonical-SMILES"]/div/div[@class="section-content-item"]'), times=100)
     cs=drivercontent.find_element_by_xpath('//*[@id="Canonical-SMILES"]/div/div[@class="section-content-item"]').text
-    addResult([[name,mf,resID,cs,""]])
+    addResult([[keyword, name,mf,resID,cs]])
     updateStatus(STATUS_SUCCESS, tableId)
 '''
 以下为框架代码，不需要修改
@@ -154,7 +162,9 @@ def processInWorker(pfi):
             # #使用第三方库，模拟浏览器登录
             from selenium import webdriver
             pfi.driver = webdriver.Chrome(executable_path = DIRVER_PATHNAME)
-            pfi.driver.get(URL)
+            if URL:
+                pfi.driver.get(URL)
+            
         except Exception, e:
             print traceback.format_exc();
             print 'initDriver error', e
