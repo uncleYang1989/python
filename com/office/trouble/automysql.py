@@ -33,23 +33,29 @@ def execu(cmd, exitOnErr=True, printErrLog=True, retry=0, passTxt=""):
     print "\n\nCMD: ", cmd
     time.sleep(0.1)
     sts, txt = commands.getstatusoutput(cmd)
-    if txt.strip():
+    if 0 == sts and txt.strip():
         print txt
     tryCount = 0;
-    while 0 != sts and retry > tryCount:
-        if passTxt:
-            if -1 != txt.find(passTxt):
+    while True:
+        if 0 == sts:
+            break;
+        else:
+            print sts, ", ", txt
+            if passTxt and -1 != txt.find(passTxt):
+                print "PASS: find passtxt"
                 return sts, txt
-        print sts, ", ", txt
-        time.sleep(1)
-        print "retry : ", tryCount
-        print cmd
-        tryCount += 1
-        if tryCount >= retry:
-            if str(raw_input("\nRetry ? Y/N\n")).lower() == "y":
-                print "Retry:", cmd
-                tryCount = 0
-        sts, txt = commands.getstatusoutput(cmd)
+            
+            if retry > tryCount:
+                time.sleep(1)
+                print "Retry : ", tryCount, cmd
+                tryCount += 1
+                sts, txt = commands.getstatusoutput(cmd)
+                if 0 == sts and txt.strip():
+                    print txt
+            elif retry > 0 and str(raw_input("\nRetry ? Y/N\n")).lower() == "y":
+                    tryCount = 0
+            else:
+                break
     if sts != 0:
         if printErrLog:
             print "ERROR : ", sts, txt
