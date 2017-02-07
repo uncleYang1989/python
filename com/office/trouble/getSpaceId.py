@@ -4,7 +4,7 @@
 import commands
 import sys
 from os.path import join
-RECOVER_DB_PATH = "/Users/yangjie/Desktop/allinone/trouble/newdon20170113/newdonmysqlrecover";
+RECOVER_DB_PATH = "/Users/yangjie/Desktop/allinone/trouble/songcheng20170206/var/lib/mysql"
 databases = ["commsky_nms", "commsky_auth"];
 result = {};
 def execu(cmd, exitOnErr = True, printErrLog = True):
@@ -29,4 +29,5 @@ for database in databases:
     result[database] = [max(spaceIds), names, spaceIds]
 for entry in result:
     print entry, result[entry][0]
+    print """for i in `seq 0 %s`; do mysql --user=root --password=c0mm3ky %s -e "CREATE TABLE inser$i (id bigint(20) NOT NULL AUTO_INCREMENT,PRIMARY KEY (id)) ENGINE=innodb "; done"""%(result[entry][0], entry)
     

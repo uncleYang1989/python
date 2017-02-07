@@ -2,9 +2,9 @@
 # -*-coding:UTF-8-*-
 # encoding=utf8
 '''#数据库的路径'''
-DATABASE_PATHNAME = r"/Users/yangjie/mywork/workspace/mypython/com/office/template4ncbiplus/db/ncbi1023.db"
+from com.office.template4ncbiplus import DBNAME as DATABASE_PATHNAME
 '''启动的进程数'''
-PROCESS_NUM=8
+PROCESS_NUM=1
 '''#谷歌浏览器驱动的路径'''
 DIRVER_PATHNAME= "/Users/yangjie/Documents/env/python/chromedriver_2.21/chromedriver_mac32/chromedriver"
 '''#要抓取的网站的URL'''

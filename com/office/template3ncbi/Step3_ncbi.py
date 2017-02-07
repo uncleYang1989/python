@@ -2,7 +2,7 @@
 # -*-coding:UTF-8-*-
 # encoding=utf8
 '''#数据库的路径'''
-DATABASE_PATHNAME = r"/Users/yangjie/mywork/workspace/mypython/com/office/template3ncbi/db/ncbi1017.db"
+DATABASE_PATHNAME = r"/Users/yangjie/mywork/workspace/mypython/com/office/template3ncbi/db/ncbi1022.db"
 '''启动的进程数'''
 PROCESS_NUM=1
 '''#谷歌浏览器驱动的路径'''
@@ -27,7 +27,6 @@ IS_NEED_DRIVER=True
 例:
     updateStatus(STATUS_SUCCESS, tableId)
 '''
-from urllib import quote
 def doSomething(driver, keyword, tableId, pfi):
     key = keyword;
     
@@ -63,7 +62,7 @@ def doSomething(driver, keyword, tableId, pfi):
         if key.upper() in myTaga.text.upper():
             href=myTaga.get_attribute("href")
             from selenium import webdriver
-            drivercontent=webdriver.Chrome(executable_path = DIRVER_PATHNAME)
+            drivercontent=webdriver.Firefox()
             drivercontent.get(href)
             retry(lambda:drivercontent.find_element_by_xpath("//table[@class='top-summary-items']/tbody/tr/td"))
             resID=drivercontent.find_element_by_xpath("//table[@class='top-summary-items']/tbody/tr/td").text
@@ -139,7 +138,7 @@ def processInWorker(pfi):
         try:
             # #使用第三方库，模拟浏览器登录
             from selenium import webdriver
-            pfi.driver = webdriver.Chrome(executable_path = DIRVER_PATHNAME)
+            pfi.driver = webdriver.Firefox()
             pfi.driver.get(URL)
         except Exception, e:
             print traceback.format_exc();
