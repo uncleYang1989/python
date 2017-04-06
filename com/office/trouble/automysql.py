@@ -7,9 +7,9 @@
 @desc    auto recover mysql for version 3.2.0
 '''
 
-RECOVER_DB_PATH = "/jyang/mysqlrecover/mysql"
+RECOVER_DB_PATH = "/root/install/jyang/mysql"
 REAL_RECOVER_DB_PATH = RECOVER_DB_PATH
-DEST_SQL_PATH = "/jyang/mysqlrecover/backup";
+DEST_SQL_PATH = "/root/install/jyang/backup";
 
 #run recover cmd
 RUN = True
