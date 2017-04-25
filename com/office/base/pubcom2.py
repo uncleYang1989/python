@@ -29,7 +29,7 @@ from com.office.util.pubUtil import doInThread, retry, doByTimeout
 
 forbidCodeErr()
 DATABASE_PATHNAME = "pub0707.db"
-DIRVER_PATHNAME= "/Users/yangjie/Documents/env/jyang-site-packages/chromedriver_2.21/chromedriver_mac32/chromedriver"
+DIRVER_PATHNAME= "/Users/yangjie/mywork/icode/cloudnms/sky-auto/autouitest/driver/chrome/chromedriver_mac32/chromedriver"
 URL=u"http://www.ncbi.nlm.nih.gov/pccompound/?term=%s"
 processRange = [0, 19000]
 
@@ -70,8 +70,10 @@ def getOnWtitch(pfi):
         try:
             # #使用第三方库，模拟浏览器登录
             from selenium import webdriver
-            pfi.driver = webdriver.Chrome(executable_path = DIRVER_PATHNAME)
+#             pfi.driver = webdriver.Chrome(executable_path = DIRVER_PATHNAME)
+            pfi.driver = webdriver.Firefox()
         except Exception, e:
+            traceback.print_exc()
             print 'initDriver error', e
             updateStatus(STATUS_NON, tableId)
             return

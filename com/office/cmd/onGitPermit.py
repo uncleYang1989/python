@@ -3,21 +3,20 @@
 from com.office.util import fileUtil
 if __name__ == '__main__':
     files = """
-sky-base/install/public/commsky/etc/sky.properties
-sky-build/config/dev/application.properties
-sky-build/config/prod/application.properties
-sky-core/core-common/src/main/java/com/commsky/core/system/DistributedInfo.java
-sky-core/core-common/src/main/java/com/commsky/core/system/SystemInfo.java
-sky-core/core-shiro/src/main/java/com/commsky/core/shiro/cache/CacheRepositoryHelper.java
-sky-core/core-shiro/src/main/java/com/commsky/core/shiro/session/SessionRepository.java
-sky-nms/nms-service/src/main/java/com/commsky/nms/web/controller/billing/BillingController.java
-sky-nms/nms-service/src/main/java/com/commsky/nms/web/services/impl/customer/TokenServiceImpl.java
+sky-nms/nms-webapp/src/main/webapp/js/cst/monitoring/monitoringDevice.js
     """.strip().splitlines();
-    destDir = "/Users/yangjie/Desktop/codebak";
+    
+    '''
+    备份模式
+    '''
     srcDir = "/Users/yangjie/mywork/icode/cloudnms";
-     
-    destDir = "/Users/yangjie/mywork/icode/cloudnms";
+    destDir = "/Users/yangjie/Desktop/codebak";
+#      
+    '''
+    恢复模式
+    '''
     srcDir = "/Users/yangjie/Desktop/codebak";
+    destDir = "/Users/yangjie/mywork/icode/cloudnms";
     
     import os
     for f in files:
