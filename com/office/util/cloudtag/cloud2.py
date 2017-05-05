@@ -37,7 +37,7 @@ import matplotlib.pyplot as plt
 
 # take relative word frequencies into account, lower max_font_size
 #wordcloud = WordCloud(max_font_size=40, relative_scaling=.5).generate(text)
-wordcloud = WordCloud(font_path='/Users/yangjie/Downloads/chrome/simhei.ttf',max_font_size=80, relative_scaling=.5).fit_words(frequencies)
+wordcloud = WordCloud(font_path='/Users/yangjie/Documents/env/python/simhei.ttf',max_font_size=80, relative_scaling=.5).fit_words(frequencies)
 plt.figure(dpi=1800)
 plt.imshow(wordcloud)
 plt.axis("off")

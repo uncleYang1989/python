@@ -18,7 +18,6 @@ import codecs
 # for line in alllines:
 #     content += line
 content = readFile("tmp.txt");
-content = content.replace(u"老公","").replace(u"老婆","")
 writeFile("tmp2.txt", content);
 tags = jieba.analyse.extract_tags(content, topK=topK, withWeight=withWeight)
 
