@@ -21,9 +21,8 @@ reload(sys)
 sys.setdefaultencoding('UTF-8')
 import time
 
-executable_path = "/Users/yangjie/Documents/env/python/chromedriver_2.21/chromedriver_mac32/chromedriver"
 from selenium import webdriver
-driver = webdriver.Chrome(executable_path)
+driver = webdriver.Firefox()
 time.sleep(0.1)
 driver.get("http://apply.hzcb.gov.cn/apply/app/status/norm/person")
 time.sleep(0.1)
@@ -59,7 +58,7 @@ for optStr in optStrs[1:]:
                 if nextEle:
                     curPage = nextEle.get_attribute("value")
                     nextEle.click();
-                    print lastText, curPage
+                    print optStr, lastText, curPage
                     if lastText == curPage:
                         break;
                     else:

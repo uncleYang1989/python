@@ -15,13 +15,13 @@ from com.office.pubmed.hl.FlowInfo import FlowInfo
 forbidCodeErr()
 pubChem=FlowInfo("ncbi2.ini")
 driverPathname=pubChem.driverPathname
-driver = webdriver.Chrome(driverPathname)
+driver = webdriver.Firefox()
 driver.get("http://www.ncbi.nlm.nih.gov/pccompound")
 mylists=pubChem.srcKeys
 result=[]
 def getchemID(key):
     while True:
-        if driver.current_url=="http://www.ncbi.nlm.nih.gov/pccompound":
+        if driver.current_url.endswith("www.ncbi.nlm.nih.gov/pccompound"):
             chat=driver.find_element_by_id("term")
             chat.clear()
             chat.send_keys(key)
@@ -30,8 +30,14 @@ def getchemID(key):
             try:
                 retry(lambda:driver.find_element_by_xpath("//table[@class='top-summary-items']/tbody/tr/td"))
                 ID1=driver.find_element_by_xpath("//table[@class='top-summary-items']/tbody/tr/td").text
-                Moleculars=driver.find_elements_by_xpath("//table[@class='top-summary-items']/tbody/tr/td/a")
-                Molecular1=Moleculars[1].text
+                trEles=driver.find_elements_by_xpath("//table[@class='top-summary-items']/tbody/tr")
+                Molecular1 = ""
+                if len(trEles) > 0:
+                    for trEle in trEles:
+                        thName = trEle.find_element_by_tag_name("th").text;
+                        if "Molecular Formula" in thName:
+                            Molecular1 = trEle.find_element_by_tag_name("td").text;
+                            break
                 print Molecular1
                 result.append([key,ID1,Molecular1])
                 pubChem.recorddata.append([key])

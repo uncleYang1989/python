@@ -2,19 +2,17 @@
 # -*-coding:UTF-8-*-
 # encoding=utf8
 '''#数据库的路径'''
-DATABASE_PATHNAME = r"/Users/yangjie/mywork/workspace/mypython/com/office/template3ncbi/db/ncbi1022.db"
+DATABASE_PATHNAME = r"chem20170510.db"
 '''启动的进程数'''
-PROCESS_NUM=1
-'''#谷歌浏览器驱动的路径'''
-DIRVER_PATHNAME= "/Users/yangjie/Documents/env/python/chromedriver_2.21/chromedriver_mac32/chromedriver"
+PROCESS_NUM=2
 '''#要抓取的网站的URL'''
-URL="http://www.ncbi.nlm.nih.gov/pccompound"
+URL=""
 '''#单个任务超时时间'''
 OVER_TIME_PROCESS=120
 '''启动浏览器的超时时间'''
 OVER_TIME_INIT_DRIVER=120
 '''#是否打印任务进度'''
-IS_NEED_PRINT_RATE=False
+IS_NEED_PRINT_RATE=True
 '''#是否需要启动浏览器'''
 IS_NEED_DRIVER=True
 '''
@@ -139,7 +137,8 @@ def processInWorker(pfi):
             # #使用第三方库，模拟浏览器登录
             from selenium import webdriver
             pfi.driver = webdriver.Firefox()
-            pfi.driver.get(URL)
+            if URL:
+                pfi.driver.get(URL)
         except Exception, e:
             print traceback.format_exc();
             print 'initDriver error', e

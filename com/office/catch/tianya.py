@@ -11,14 +11,14 @@ forbidCodeErr()
 # #使用第三方库，模拟浏览器登录
 from selenium import webdriver
 driver = webdriver.Firefox()
-driver.get("http://bbs.tianya.cn/post-1095-384706-1.shtml");
+driver.get("http://bbs.tianya.cn/post-feeling-4285505-1.shtml");
 output = ""
-f = open("/Users/yangjie/Desktop/tianya.txt", "wb")
+f = open(u"/Users/yangjie/Desktop/33.txt", "wb")
 while True:
     altItemEles = driver.find_elements_by_class_name("atl-item");
     for altItemEle in altItemEles:
         _hostid = altItemEle.get_attribute("_hostid")
-        if _hostid == "121832852":
+        if _hostid == "124716888":
             contentPart = altItemEle.find_element_by_class_name("bbs-content").text
             print "contentPart", contentPart
             output = "\n"

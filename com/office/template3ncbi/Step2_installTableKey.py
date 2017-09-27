@@ -15,7 +15,7 @@ from com.office.util.excelUtil import read
 
 if __name__ == "__main__":
     keywords = []
-    srcpathname = r"/Users/yangjie/mywork/workspace/mypython/com/office/template3ncbi/ncbi/formula_non-id.xls"
+    srcpathname = r"/Users/yangjie/Downloads/qq/ingredients_only.xlsx"
     if srcpathname.endswith("xls") or srcpathname.endswith("xlsx"):
         tableData = read(srcpathname, "Sheet1");
         for row in tableData:

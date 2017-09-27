@@ -78,7 +78,6 @@ for srcFile, c in zip(srcFiles, cs):
         
     print c
     print "x","y"
-    print "x","y"
     typelist.append(plt.scatter(x, y, s=20, c=c))
     descList.append(srcFile);
     

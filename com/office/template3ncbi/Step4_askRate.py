@@ -23,8 +23,7 @@ def get_work_root():
     return "";
 sys.path.append(get_work_root())
 import sqlite3,time
-from com.office.template3ncbi import DBNAME
-
+DBNAME = r"chem20170510.db"
 if __name__ == "__main__":
     onBeginFinished=None;
     beginTime = int(time.time())
