@@ -21,8 +21,13 @@ reload(sys)
 sys.setdefaultencoding('UTF-8')
 import time
 
-from selenium import webdriver
-driver = webdriver.Firefox()
+from selenium import webdriver  
+profile = webdriver.FirefoxProfile()  
+profile.set_preference("browser.startup.homepage", "about:blank")  
+profile.set_preference("startup.homepage_welcome_url", "about:blank")  
+profile.set_preference("startup.homepage_welcome_url.additional", "about:blank")  
+profile.update_preferences()  
+driver = webdriver.Firefox(executable_path="/Users/yangjie/Downloads/chrome/geckodriver")  
 time.sleep(0.1)
 driver.get("http://apply.hzcb.gov.cn/apply/app/status/norm/person")
 time.sleep(0.1)
@@ -66,12 +71,11 @@ for optStr in optStrs[1:]:
                 else:
                     break
             except Exception, e:
+                print e
                 import traceback
                 print traceback.format_exc();
                 break
-                pass
         except:
-            driver.refresh()
             time.sleep(0.1)
     
     resultDate = [[], []]
