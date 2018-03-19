@@ -27,7 +27,7 @@ profile.set_preference("browser.startup.homepage", "about:blank")
 profile.set_preference("startup.homepage_welcome_url", "about:blank")  
 profile.set_preference("startup.homepage_welcome_url.additional", "about:blank")  
 profile.update_preferences()  
-driver = webdriver.Firefox(executable_path="/Users/yangjie/Downloads/chrome/geckodriver")  
+driver = webdriver.Chrome(executable_path="/Users/yangjie/mywork/icode/cloudnms/sky-auto/autouitest/driver/chrome/chromedriver_mac32/chromedriver")  
 time.sleep(0.1)
 driver.get("http://apply.hzcb.gov.cn/apply/app/status/norm/person")
 time.sleep(0.1)
@@ -43,12 +43,14 @@ for optStr in optStrs[1:]:
     print optStr
     retry(lambda:Select(driver.find_element_by_id("issueNumber")).select_by_value(optStr))
     retry(lambda:driver.find_element_by_xpath('//*[@id="search"]').click())
+    retry(lambda:driver.find_element_by_class_name("totalcount").text)
+    total = int(driver.find_element_by_class_name("totalcount").text)
     d = {}
     lastText = ""
     while True:
         try:
             # 找出当前页的所有名字
-            trEles = driver.find_elements_by_class_name("content_data");
+            trEles = driver.find_elements_by_class_name("content_data") + driver.find_elements_by_class_name("content_data1");
             for trEle in trEles:
                 tdEles = trEle.find_elements_by_tag_name("td");
                 d[tdEles[0].text] = tdEles[1].text
@@ -63,7 +65,7 @@ for optStr in optStrs[1:]:
                 if nextEle:
                     curPage = nextEle.get_attribute("value")
                     nextEle.click();
-                    print optStr, lastText, curPage
+                    print "[%s] total[%s] current[%s] page[%s]"%(optStr, total, len(d), curPage)
                     if lastText == curPage:
                         break;
                     else:
@@ -74,7 +76,10 @@ for optStr in optStrs[1:]:
                 print e
                 import traceback
                 print traceback.format_exc();
-                break
+                if len(d) < total:
+                    pass
+                else:
+                    break
         except:
             time.sleep(0.1)
     
