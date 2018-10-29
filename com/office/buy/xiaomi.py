@@ -12,8 +12,8 @@ from com.office.util.pubUtil import retry
 forbidCodeErr()
 # #使用第三方库，模拟浏览器登录
 from selenium import webdriver
-driver = webdriver.Chrome(executable_path="/Users/yangjie/mywork/icode/cloudnms/sky-auto/autouitest/driver/chrome/chromedriver_mac32/chromedriver")
-driver.get("https://www.mi.com/");
+driver = webdriver.Chrome(executable_path="/Users/jyang/work/env/py/selenium/chromedriver")
+driver.get("https://www.mi.com/index.html");
 while True:
     try:
         if r"item.mi.com/product" in driver.current_url:
@@ -29,3 +29,4 @@ while True:
     except:
         time.sleep(0.01)
         continue
+
